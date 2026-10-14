@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kế hoạch Larkbase Amber — Nghề Nặng Nghệ</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0A0A;--cream:#F5F0E8;--gold:#C9A84C;--gold-light:#E8C96A;--gold-dark:#8C6D2A;
+  --rust:#B5432A;--forest:#2A4A3A;--slate:#3A4A5C;--warm-gray:#8A7F74;--light-gray:#D4CECC;
+  --line:rgba(201,168,76,.18);--card:rgba(255,255,255,.03);
+  --display:'Playfair Display',serif;--body:'Be Vietnam Pro',sans-serif;--mono:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--cream);font-family:var(--body);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:var(--gold)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 40px}
+nav{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px}
+.logo{font-family:var(--display);color:var(--gold);font-size:18px;letter-spacing:.04em;white-space:nowrap}
+.navlinks{display:flex;gap:24px;list-style:none}
+.navlinks a{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--warm-gray);text-decoration:none}
+.navlinks a:hover{color:var(--gold)}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.tag::before{content:'';width:32px;height:1px;background:var(--gold)}
+header.hero{position:relative;padding:80px 0 56px;overflow:hidden}
+header.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 85% 40%,rgba(201,168,76,.09),transparent 70%),radial-gradient(ellipse 40% 60% at 5% 90%,rgba(42,74,58,.18),transparent 60%);pointer-events:none}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.3fr 1fr;gap:56px;align-items:end}
+h1{font-family:var(--display);font-size:clamp(36px,5vw,60px);line-height:1.08;margin-bottom:20px}
+h1 em{color:var(--gold);font-style:italic}
+.lead{color:var(--warm-gray);max-width:520px;font-size:16px}
+.lead b{color:var(--cream);font-weight:600}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:var(--card);border:1px solid var(--line);padding:18px 20px;position:relative}
+.stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.stat .n{font-family:var(--display);font-size:34px;font-weight:700;color:var(--gold);line-height:1}
+.stat .l{font-size:12px;color:var(--warm-gray);margin-top:6px}
+section{padding:56px 0;border-top:1px solid rgba(201,168,76,.1)}
+h2{font-family:var(--display);font-size:clamp(26px,3.4vw,38px);line-height:1.15;margin-bottom:10px}
+h2 em{color:var(--gold);font-style:italic}
+.sub{color:var(--warm-gray);max-width:640px;margin-bottom:28px}
+/* progress */
+.prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:12px;flex-wrap:wrap}
+.prog-pct{font-family:var(--display);font-size:44px;color:var(--gold);font-weight:700;line-height:1}
+.bar{height:6px;background:rgba(255,255,255,.07);position:relative;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width .4s}
+.phase-prog{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.pp{border:1px solid var(--line);padding:14px 16px;background:var(--card)}
+.pp .k{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.pp .t{font-size:13px;font-weight:600;margin:4px 0 10px;min-height:40px}
+.pp .c{font-family:var(--mono);font-size:11px;color:var(--warm-gray);margin-top:8px}
+.note{font-size:12px;color:var(--warm-gray);margin-top:14px;font-style:italic}
+/* timeline */
+.tl{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;margin-top:8px}
+.day{border:1px solid rgba(201,168,76,.12);padding:8px 6px;min-height:92px;background:var(--card);display:flex;flex-direction:column;gap:4px}
+.day.we{background:rgba(58,74,92,.18)}
+.day.today{border-color:var(--gold)}
+.day .d{font-family:var(--mono);font-size:10px;color:var(--warm-gray);letter-spacing:.06em}
+.day .d b{display:block;font-family:var(--display);font-size:18px;color:var(--cream);font-weight:700;letter-spacing:0}
+.chip-t{font-family:var(--mono);font-size:10px;padding:2px 5px;background:rgba(201,168,76,.14);color:var(--gold-light);cursor:pointer;border:0;text-align:left}
+.chip-t.done{background:rgba(42,74,58,.5);color:#9ec3ad;text-decoration:line-through}
+.chip-t.late{background:rgba(181,67,42,.3);color:#f0a08c}
+/* filters */
+.filters{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.frow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.frow .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--warm-gray);width:84px}
+.fb{font-family:var(--body);font-size:12px;font-weight:500;background:transparent;color:var(--warm-gray);border:1px solid rgba(138,127,116,.35);padding:6px 12px;cursor:pointer;transition:all .2s}
+.fb:hover{color:var(--cream);border-color:var(--gold-dark)}
+.fb.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.fb .cnt{font-family:var(--mono);font-size:10px;margin-left:6px;opacity:.75}
+/* task cards */
+.tasks{display:flex;flex-direction:column;gap:10px}
+.task{border:1px solid var(--line);background:var(--card);position:relative;transition:border-color .2s}
+.task::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.task.done::before{background:var(--forest)}
+.task.late::before{background:var(--rust)}
+.task.done{opacity:.62}
+.thead{display:grid;grid-template-columns:28px 1fr auto;gap:14px;align-items:start;padding:16px 18px 16px 20px;cursor:pointer}
+.cb{width:22px;height:22px;border:1.5px solid var(--gold);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:3px;flex-shrink:0}
+.cb svg{width:14px;height:14px;opacity:0}
+.task.done .cb{background:var(--gold)}
+.task.done .cb svg{opacity:1}
+.meta{display:flex;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:4px}
+.meta .id{color:var(--gold)}
+.meta .late-t{color:#f0a08c}
+.meta .today-t{color:var(--gold-light)}
+.ttl{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.3}
+.task.done .ttl{text-decoration:line-through;text-decoration-color:var(--gold-dark)}
+.out{font-size:13px;color:var(--warm-gray);margin-top:4px}
+.out b{color:var(--light-gray);font-weight:600}
+.arrow{font-family:var(--mono);color:var(--gold);font-size:18px;transition:transform .25s;margin-top:4px}
+.task.open .arrow{transform:rotate(45deg)}
+.tbody{display:none;padding:0 22px 22px 62px}
+.task.open .tbody{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.blk{border-top:1px solid rgba(201,168,76,.15);padding-top:12px}
+.blk h4{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:500}
+.blk ol,.blk ul{padding-left:18px;font-size:13.5px;color:var(--light-gray)}
+.blk li{margin-bottom:5px}
+.blk p{font-size:13.5px;color:var(--light-gray)}
+.fields{display:flex;flex-wrap:wrap;gap:5px}
+.fields span{font-size:11.5px;border:1px solid rgba(201,168,76,.25);padding:2px 8px;color:var(--cream)}
+.fields span.f{border-color:rgba(232,201,106,.6);color:var(--gold-light)}
+.fields span.l{border-color:rgba(158,195,173,.5);color:#9ec3ad}
+.legend{font-size:11px;color:var(--warm-gray);margin-top:8px}
+.warn{margin-top:14px;border-left:3px solid var(--rust);background:rgba(181,67,42,.1);padding:10px 14px;font-size:13px;color:#f3c7bb}
+.warn b{color:#f0a08c;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:3px}
+.full{grid-column:1/-1}
+.empty{padding:28px;text-align:center;color:var(--warm-gray);border:1px dashed var(--line)}
+/* questions */
+.qs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.q{border:1px solid rgba(181,67,42,.35);background:rgba(181,67,42,.05);padding:16px 18px}
+.q .qh{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#f0a08c;margin-bottom:6px;gap:10px}
+.q p{font-size:14px}
+.q .why{font-size:12px;color:var(--warm-gray);margin-top:6px}
+/* backlog table */
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);text-align:left;padding:10px 12px;border-bottom:1px solid var(--gold-dark);font-weight:500}
+.tbl td{padding:12px;border-bottom:1px solid rgba(201,168,76,.1);vertical-align:top;color:var(--light-gray)}
+.tbl td:first-child{font-family:var(--mono);color:var(--gold);white-space:nowrap}
+.tbl td b{color:var(--cream)}
+.pill{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border:1px solid var(--warm-gray);color:var(--warm-gray);white-space:nowrap}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.rule{border:1px solid var(--line);padding:18px;background:var(--card)}
+.rule .n{font-family:var(--display);font-size:28px;color:var(--gold);font-weight:700;line-height:1}
+.rule h3{font-family:var(--display);font-size:18px;margin:8px 0 6px}
+.rule p{font-size:13px;color:var(--warm-gray)}
+footer{padding:36px 0 60px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--warm-gray);text-transform:uppercase}
+@media (max-width:860px){
+  .wrap{padding:0 16px}
+  .navlinks{display:none}
+  .hero-grid,.grid2,.qs,.rules{grid-template-columns:1fr}
+  header.hero{padding:48px 0 36px}
+  .phase-prog{grid-template-columns:1fr 1fr}
+  .tl{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .tbody{padding:0 16px 18px 20px}
+  .thead{padding:14px 14px 14px 18px;gap:10px}
+  .ttl{font-size:17px}
+  .frow .lbl{width:100%}
+  .tbl thead{display:none}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl tr{border-bottom:1px solid var(--line);padding:8px 0}
+  .tbl td{border:0;padding:4px 0}
+}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="logo">Nghề Nặng Nghệ</div>
+  <ul class="navlinks">
+    <li><a href="#tien-do">Tiến độ</a></li>
+    <li><a href="#lich">Lịch</a></li>
+    <li><a href="#viec">Việc cần làm</a></li>
+    <li><a href="#cau-hoi">Cần chốt</a></li>
+    <li><a href="#dot-2">Đợt 2</a></li>
+  </ul>
+</div></nav>
+
+<header class="hero"><div class="wrap hero-grid">
+  <div>
+    <div class="tag">Kế hoạch triển khai · Larkbase</div>
+    <h1>Dựng hệ thống<br>vận hành cho <em>Amber</em></h1>
+    <p class="lead">Đợt 1 đi theo <b>dòng tiền</b>: Sản phẩm → Khách hàng → Hợp đồng → Hậu kỳ → Doanh thu. Người làm: <b>anh Quang</b>, nhịp <b>~1 giờ/ngày</b>. Phần lương, chi tiêu, concept, lab in, khảo sát để sang Đợt 2.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">12</div><div class="l">việc trong Đợt 1</div></div>
+    <div class="stat"><div class="n">12h</div><div class="l">tổng thời gian ước tính</div></div>
+    <div class="stat"><div class="n">22/9</div><div class="l">bắt đầu (Thứ 3)</div></div>
+    <div class="stat"><div class="n">4/10</div><div class="l">nghiệm thu Đợt 1 (CN)</div></div>
+  </div>
+</div></header>
+
+<main>
+<section id="tien-do"><div class="wrap">
+  <div class="tag">01 · Tiến độ</div>
+  <div class="prog-top">
+    <h2>Đã xong <em id="doneTxt">0/12</em> việc</h2>
+    <div class="prog-pct" id="pct">0%</div>
+  </div>
+  <div class="bar"><i id="barAll" style="width:0%"></i></div>
+  <div class="phase-prog" id="phaseProg"></div>
+  <p class="note">Tick lưu trong lúc trang đang mở. Đóng file thì tick sẽ về trạng thái ban đầu.</p>
+</div></section>
+
+<section id="lich"><div class="wrap">
+  <div class="tag">02 · Lịch 13 ngày</div>
+  <h2>Mỗi ngày <em>một việc</em>, một kết quả</h2>
+  <p class="sub">Ô nền xanh xám là cuối tuần. Thứ 7–CN 3–4/10 dùng cho doanh thu, chạy thử và nghiệm thu; nếu trễ thì đây cũng là quỹ đệm. Bấm vào mã việc để mở chi tiết.</p>
+  <div class="tl" id="timeline"></div>
+</div></section>
+
+<section id="viec"><div class="wrap">
+  <div class="tag">03 · Việc cần làm</div>
+  <h2>Danh sách việc <em>Đợt 1</em></h2>
+  <p class="sub">Mỗi việc có kết quả đầu ra và tiêu chí đo lường để biết chắc đã xong. Bấm vào tiêu đề để xem trường dữ liệu, công thức và các bước.</p>
+  <div class="filters">
+    <div class="frow" id="fPhase"><span class="lbl">Giai đoạn</span></div>
+    <div class="frow" id="fStatus"><span class="lbl">Trạng thái</span></div>
+  </div>
+  <div class="tasks" id="tasks"></div>
+</div></section>
+
+<section id="cau-hoi"><div class="wrap">
+  <div class="tag">04 · Cần chốt trước khi làm</div>
+  <h2>8 điểm biên bản <em>chưa rõ</em></h2>
+  <p class="sub">Em không tự điền các chỗ này. Mỗi câu ghi rõ chặn việc nào và hạn cần có câu trả lời, để anh Quang hỏi Amber trước buổi làm.</p>
+  <div class="qs" id="qs"></div>
+</div></section>
+
+<section id="dot-2"><div class="wrap">
+  <div class="tag">05 · Đợt 2 · Đề xuất</div>
+  <h2>Phần để sau <em>4/10</em></h2>
+  <p class="sub">Lịch dưới đây là đề xuất, anh Quang duyệt rồi mới chốt. Nhóm lương xếp đầu để kịp kỳ lương cuối tháng 10.</p>
+  <table class="tbl">
+    <thead><tr><th>Mã</th><th>Việc</th><th>Nội dung từ biên bản</th><th>Ước tính</th><th>Tuần đề xuất</th></tr></thead>
+    <tbody id="backlog"></tbody>
+  </table>
+</div></section>
+
+<section><div class="wrap">
+  <div class="tag">06 · Nguyên tắc làm</div>
+  <h2>Ba điều giữ kế hoạch <em>khả thi</em></h2>
+  <div class="rules">
+    <div class="rule"><div class="n">01</div><h3>Xong trường trước, công thức sau</h3><p>Bảng nào cũng dựng đủ trường và liên kết trước. Công thức phụ thuộc bảng sau (tổng tiền, ngày trả ảnh) thì nối khi bảng đó xong, không chờ.</p></div>
+    <div class="rule"><div class="n">02</div><h3>Thiếu dữ liệu thì dùng số thử</h3><p>Nếu Amber chưa gửi file, dựng với 3–5 dòng thử rồi làm tiếp. Nhập dữ liệu thật dồn vào ngày chạy thử 4/10.</p></div>
+    <div class="rule"><div class="n">03</div><h3>Trễ 2 việc thì cắt dashboard</h3><p>Nếu đến 30/9 còn trễ từ 2 việc trở lên, chuyển phần dashboard (T11) sang Đợt 2 để giữ ngày nghiệm thu 4/10.</p></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">Nghề Nặng Nghệ · Kế hoạch Larkbase Amber · Lập ngày 21/9/2026</div></footer>
+
+<script>
+const PHASES=[
+  {id:'P1',name:'Nền móng',range:'22–24/9'},
+  {id:'P2',name:'Khách hàng & Hợp đồng',range:'25–30/9'},
+  {id:'P3',name:'Chi tiết đơn & Hậu kỳ',range:'1–2/10'},
+  {id:'P4',name:'Doanh thu & Nghiệm thu',range:'3–4/10'}
+];
+// f: trường công thức · l: trường liên kết/tra cứu
+const TASKS=[
+ {id:'T01',p:'P1',date:'2026-09-22',min:60,owner:'Anh Quang',
+  title:'Khởi tạo Base Amber và bộ quy ước mã',
+  out:'Base "Amber — Vận hành" có 7 bảng rỗng đúng tên, quy ước mã 1 trang',
+  steps:['Tạo Base "Amber — Vận hành" trong Lark.','Tạo 7 bảng rỗng: Nhân sự, Sản phẩm, Khách hàng, Hợp đồng, HĐ chi tiết, Hậu kỳ, Kế hoạch doanh thu.','Đặt quy ước mã tự tăng: KH-0001, HD-0001, CT-0001, HK-0001, SP-001.','Mời tài khoản quản lý của Amber vào Base, phân quyền xem/sửa.'],
+  measure:['7/7 bảng đã tạo, tên đúng quy ước.','Ít nhất 1 tài khoản Amber đăng nhập và xem được Base.'],
+  fields:[],dep:'Không'},
+ {id:'T02',p:'P1',date:'2026-09-22',min:30,owner:'Trang',
+  title:'Gửi Amber danh sách dữ liệu cần cung cấp',
+  out:'Tin nhắn yêu cầu 4 file gửi Amber, hạn nhận 24/9 12:00',
+  steps:['Bảng giá hiện hành: gói chụp, dịch vụ, sản phẩm (tên, đơn giá, mô tả).','Danh sách nhân sự: họ tên, bộ phận, SĐT, tài khoản Lark.','File khách hàng cũ (tên, SĐT, tên bé, sinh nhật, nguồn nếu có).','10 đơn hàng gần nhất để chạy thử ngày 4/10.','Gửi kèm 8 câu hỏi ở mục "Cần chốt" để Amber trả lời cùng lúc.'],
+  measure:['Amber xác nhận đã nhận yêu cầu trong ngày 22/9.','Nhận đủ 4/4 file trước 24/9 12:00. Thiếu file nào thì báo anh Quang ngay chiều 24/9.'],
+  fields:[],dep:'Không'},
+ {id:'T03',p:'P1',date:'2026-09-23',min:60,owner:'Anh Quang',
+  title:'Dựng bảng Nhân sự và khung bảng Sản phẩm',
+  out:'2 bảng đủ trường, lựa chọn đúng danh sách biên bản',
+  steps:['Bảng Nhân sự là nguồn cho các ô Người lên đơn, Người chốt, Người chụp, Hỗ trợ, Makeup, Người chỉnh ở bảng Hợp đồng.','Bộ phận: Sale, Photo, Hỗ trợ, Makeup, Hậu kỳ, Quản lý.','Bảng Sản phẩm: Loại gồm Gói chụp / Dịch vụ / Sản phẩm; Dòng gói gồm Newborn / Baby / Gia đình / Tại nhà.'],
+  fieldsGroups:[
+   {n:'Nhân sự',f:['Họ tên','Bộ phận','Tài khoản Lark','SĐT','Trạng thái (Đang làm / Nghỉ)']},
+   {n:'Sản phẩm',f:['Mã SP','Tên SP','Loại','Dòng gói','Tên gói con','Đơn giá','Mô tả','Đang bán (tick)']}],
+  measure:['Nhân sự đủ 5 trường, Sản phẩm đủ 8 trường.','Tất cả lựa chọn khớp biên bản, không thêm tuỳ ý.'],
+  dep:'T01'},
+ {id:'T04',p:'P1',date:'2026-09-24',min:60,owner:'Anh Quang',
+  title:'Nhập danh mục sản phẩm và nhân sự thật',
+  out:'100% sản phẩm đang bán có mã và đơn giá; 100% nhân sự đang làm có bộ phận',
+  steps:['Nhập theo file Amber gửi ở T02.','Gán 7 tên gói con vào đúng dòng: Ngày đầu của con, Ba mẹ bên con, Kỷ niệm của con, Dấu ấn tuổi thơ, Con lớn từng ngày, Khoảnh khắc yêu thương, Sinh nhật đầu tiên.','Nếu chưa có file: nhập 5 dòng thử để không chặn T05.'],
+  measure:['Số dòng trong Lark = số dòng file Amber.','Không dòng nào trống Đơn giá hoặc Bộ phận.'],
+  fields:[],dep:'T02, T03 · Câu hỏi Q1',q:'Q1'},
+ {id:'T05',p:'P2',date:'2026-09-25',min:60,owner:'Anh Quang',
+  title:'Dựng bảng Khách hàng',
+  out:'Bảng Khách hàng 12 trường, có view "Sinh nhật bé tháng này"',
+  steps:['Nguồn KH là lựa chọn đơn với 8 giá trị: Tiktok, Fanpage, Giới thiệu, Staff Ref, Group facebook, Instagram, Khách cũ, Zalo OA.','Bật cảnh báo trùng SĐT.','Tạo sẵn 3 trường Số HĐ, Tổng giá trị HĐ, Số lần quay lại; nối công thức ở T07.','Tạo view lọc sinh nhật bé trong tháng hiện tại.'],
+  fieldsGroups:[{n:'Khách hàng',f:['Mã KH','Tên KH','Tên bé','SĐT','Địa chỉ','Sinh nhật khách','Sinh nhật bé','Nguồn KH'],l:['Số HĐ','Tổng giá trị HĐ'],fx:['Số lần quay lại','Nhóm KH']}],
+  measure:['Nhập thử 5 khách không lỗi.','Nhập trùng SĐT thì Lark báo trùng.'],
+  dep:'T01'},
+ {id:'T06',p:'P2',date:'2026-09-28',min:75,owner:'Anh Quang',
+  title:'Dựng bảng Hợp đồng và liên kết Khách hàng, Nhân sự',
+  out:'Bảng Hợp đồng ~22 trường, liên kết 2 chiều với Khách hàng và Nhân sự',
+  steps:['Khách hàng nối bảng Khách hàng; 6 ô người (lên đơn, chốt, chụp, hỗ trợ, makeup, chỉnh) nối bảng Nhân sự.','Nguồn đơn hàng: Khách giới thiệu khách (5%), Tiktok (10%), Zalo (5%), Khách cũ (5%), Nhân viên bán (12%).','Mã concept và Hình ảnh concept tạm để dạng chữ/ảnh đính kèm; nối bảng Concept ở Đợt 2.','Ngày trả ảnh để trống, nối từ bảng Hậu kỳ ở T10.'],
+  fieldsGroups:[{n:'Hợp đồng',f:['Mã đơn','Ngày tạo đơn','Nguồn đơn hàng','Ngày chụp','Tổng giá trị đơn hàng','KH đã thanh toán','Thu tiền KH','Note thu tiền','Ghi chú HĐ','Mã concept','Hình ảnh concept'],l:['Khách hàng','Người lên đơn','Người chốt khách','Người chụp','Hỗ trợ','Makeup','Người chỉnh','Ngày trả ảnh'],fx:['Số còn lại phải thu','Công nợ']}],
+  measure:['Tạo 3 đơn thử; mở hồ sơ khách thấy đủ 3 đơn.','Chọn người ở 6 ô đều lấy từ bảng Nhân sự, không gõ tay.'],
+  dep:'T03, T05 · Câu hỏi Q2',q:'Q2'},
+ {id:'T07',p:'P2',date:'2026-09-29',min:60,owner:'Anh Quang',
+  title:'Công thức phân nhóm khách và nhập khách cũ',
+  out:'Nhóm KH tự tính cho 100% khách; toàn bộ khách cũ đã vào bảng',
+  steps:['Số HĐ = đếm đơn liên kết; Tổng giá trị HĐ = cộng Tổng giá trị đơn hàng; Số lần quay lại = Số HĐ − 1.','Nhóm KH theo biên bản, xét từ trên xuống: SVIP (giá trị HĐ trên 15.000.000đ) → VIP (giá trị HĐ trên 7.000.000đ hoặc quay lại 4 lần) → Thân thiết (quay lại lần 2 hoặc 3) → Basic.','Nhập file khách cũ của Amber.'],
+  fields:[],
+  measure:['100% khách cũ đã nhập, không trùng SĐT.','Kiểm tay 10 khách ngẫu nhiên: nhóm đúng 10/10.'],
+  dep:'T06 · Câu hỏi Q3',q:'Q3'},
+ {id:'T08',p:'P2',date:'2026-09-30',min:45,owner:'Anh Quang',
+  title:'Công thức thu tiền và theo dõi công nợ',
+  out:'Số còn lại phải thu tự tính; view "Công nợ" lọc đơn còn nợ',
+  steps:['Số còn lại phải thu = Tổng giá trị đơn hàng − KH đã thanh toán.','Công nợ: đánh dấu "Còn nợ" khi Số còn lại > 0.','Tạo view Công nợ, sắp theo Ngày chụp.'],
+  fields:[],
+  measure:['Chạy 3 tình huống: trả đủ, mới đặt cọc, chưa trả — cả 3 ra đúng.','View Công nợ chỉ hiện đơn còn nợ.'],
+  dep:'T06 · Câu hỏi Q4',q:'Q4'},
+ {id:'T09',p:'P3',date:'2026-10-01',min:75,owner:'Anh Quang',
+  title:'Dựng bảng HĐ chi tiết và ghi nhận upsell',
+  out:'Mỗi đơn chia được nhiều dòng sản phẩm; tổng đơn tự cộng từ chi tiết',
+  steps:['Mỗi dòng nối 1 Hợp đồng và 1 Sản phẩm; Tên SP, Thông tin SP, Đơn giá tra từ bảng Sản phẩm.','Doanh số = Số lượng × Đơn giá; Doanh thu = Doanh số − Giảm giá.','Chuyển Tổng giá trị đơn hàng ở bảng Hợp đồng thành tổng Doanh thu các dòng chi tiết.','Upsell tick + Số tiền upsell + Người upsell (nối Nhân sự).'],
+  fieldsGroups:[{n:'HĐ chi tiết',f:['Mã HĐ chi tiết','Thời gian tạo','Nhóm SP','Số lượng','Giảm giá','Upsell (tick)','Số tiền upsell'],l:['Hợp đồng','Mã SP','Tên SP','Thông tin SP','Đơn giá','Người upsell'],fx:['Doanh số','Doanh thu']}],
+  measure:['Đơn thử 3 dòng sản phẩm: tổng Lark khớp tính tay.','Sửa đơn giá 1 dòng thì tổng đơn đổi theo.'],
+  dep:'T04, T06 · Câu hỏi Q5',q:'Q5'},
+ {id:'T10',p:'P3',date:'2026-10-02',min:60,owner:'Anh Quang',
+  title:'Dựng bảng Hậu kỳ và hạn trả ảnh 5 ngày',
+  out:'Hạn trả ảnh tự tính; view Kanban theo trạng thái và view "Chậm deadline"',
+  steps:['Ngày trả ảnh khách = Ngày chọn ảnh + 5 ngày.','Đề xuất thêm trường Ngày trả thực tế để tính Số ngày chậm (biên bản chưa có).','Trạng thái: Chưa làm, Đang làm, Đã làm, Đã trả, Đã in.','Nối lên Hợp đồng: Ngày trả ảnh ở Hợp đồng tra từ Hậu kỳ.'],
+  fieldsGroups:[{n:'Hậu kỳ',f:['Mã Hậu kỳ','Ngày chọn ảnh','Link ảnh gốc','Link ảnh sửa','Trạng thái','Tình trạng','Ngày trả thực tế (đề xuất)'],l:['HĐ liên quan'],fx:['Ngày trả ảnh khách','Số ngày chậm','Chậm deadline']}],
+  measure:['Đơn thử chọn ảnh 2/10 → hạn tự hiện 7/10.','Đổi ngày thực tế sang 9/10 → Số ngày chậm = 2, cờ Chậm deadline bật.'],
+  dep:'T06 · Câu hỏi Q6',q:'Q6'},
+ {id:'T11',p:'P4',date:'2026-10-03',min:75,owner:'Anh Quang',
+  title:'Kế hoạch doanh thu 6 tháng cuối năm và dashboard',
+  out:'Bảng mục tiêu theo tháng + dashboard 4 chỉ số',
+  steps:['6 dòng tháng 7–12/2026. Mục tiêu cả kỳ: doanh thu 2.400.000.000đ, lợi nhuận 600.000.000đ (25%) theo biên bản.','Doanh thu thực tế = cộng Doanh thu HĐ chi tiết theo tháng.','Cột % chi phí mục tiêu / thực tế để trống, nối bảng chi tiêu ở Đợt 2.','Dashboard: Doanh thu tháng so mục tiêu · Tổng công nợ · Số đơn chậm hậu kỳ · Khách mới theo nguồn.'],
+  fieldsGroups:[{n:'Kế hoạch doanh thu',f:['Tháng','Doanh thu mục tiêu','% Chi phí mục tiêu'],l:['Doanh thu thực tế','% Chi phí thực tế (Đợt 2)'],fx:['% Hoàn thành']}],
+  measure:['Số trên dashboard khớp số lọc tay ở từng bảng.','Doanh thu mục tiêu từng tháng là số anh Quang/Amber chốt, không phải số ước lượng.'],
+  dep:'T09, T10 · Câu hỏi Q7',q:'Q7'},
+ {id:'T12',p:'P4',date:'2026-10-04',min:90,owner:'Anh Quang',
+  title:'Chạy thử 10 đơn thật và nghiệm thu với Amber',
+  out:'Biên bản nghiệm thu Đợt 1 + hướng dẫn nhập liệu 1 trang cho sale và hậu kỳ',
+  steps:['Nhập 10 đơn gần nhất của Amber đi hết luồng: Khách hàng → Hợp đồng → HĐ chi tiết → Hậu kỳ → Doanh thu.','Ghi lỗi phát sinh vào 1 danh sách, mỗi lỗi có người sửa và hạn.','Viết hướng dẫn nhập liệu 1 trang: ai nhập bảng nào, lúc nào.','Họp 30 phút với Amber để nghiệm thu, chốt lịch Đợt 2.'],
+  fields:[],
+  measure:['10/10 đơn đi hết luồng, không phải sửa số bằng tay.','Danh sách lỗi dưới 5 mục, 100% có người sửa và hạn.','Amber xác nhận nghiệm thu Đợt 1.'],
+  dep:'T01–T11'}
+];
+const QS=[
+ {id:'Q1',t:'T04',by:'23/9',q:'7 tên gói con (Ngày đầu của con, Ba mẹ bên con, Kỷ niệm của con, Dấu ấn tuổi thơ, Con lớn từng ngày, Khoảnh khắc yêu thương, Sinh nhật đầu tiên) thuộc dòng Newborn, Baby hay Gia đình? Ở nhánh Dịch vụ có mục "Subtopic 1" là gì?',why:'Sơ đồ biên bản không thể hiện rõ nhánh nối.'},
+ {id:'Q2',t:'T06',by:'25/9',q:'Tỷ lệ ở Nguồn đơn hàng (Khách giới thiệu 5%, Tiktok 10%, Zalo 5%, Khách cũ 5%, Nhân viên bán 12%) là hoa hồng trả cho người giới thiệu/nhân viên, hay chi phí kênh?',why:'Quyết định có cần trường tính tiền hoa hồng trong Hợp đồng hay không.'},
+ {id:'Q3',t:'T07',by:'28/9',q:'Ngưỡng VIP 7.000.000đ và SVIP 15.000.000đ tính theo giá trị 1 hợp đồng, hay tổng giá trị các hợp đồng của khách?',why:'Hai cách cho ra danh sách VIP khác nhau.'},
+ {id:'Q4',t:'T08',by:'29/9',q:'"Thu tiền KH" khác "KH đã thanh toán" thế nào (ngày thu, hình thức, người thu)? Công nợ tính từ khi nào — sau ngày chụp hay sau ngày trả ảnh?',why:'Biên bản chỉ ghi tên trường, chưa có định nghĩa.'},
+ {id:'Q5',t:'T09',by:'30/9',q:'Dòng Upsell ghi "Chỉ tính với…" bị cắt trong biên bản. Upsell chỉ tính với nhóm sản phẩm nào?',why:'Ảnh hưởng cả lương Sale 5% upsell ở Đợt 2.'},
+ {id:'Q6',t:'T10',by:'1/10',q:'Hạn 5 ngày là ngày lịch hay ngày làm việc? Trường "Tình trạng" khác "Trạng thái" ở điểm nào? Có đồng ý thêm trường Ngày trả thực tế không?',why:'Không có ngày trả thực tế thì không tính được số ngày chậm.'},
+ {id:'Q7',t:'T11',by:'2/10',q:'Tiêu đề "Doanh thu 60 tháng cuối năm 2026" hiểu là 6 tháng (7–12/2026) đúng không? 2.400.000.000đ chia cho từng tháng thế nào? Doanh thu ghi nhận theo ngày tạo đơn hay ngày chụp?',why:'Thiếu phân bổ theo tháng thì dashboard không so được mục tiêu.'},
+ {id:'Q8',t:'Đợt 2',by:'4/10',q:'Lương theo ngày công = Lương cơ bản × Ngày công: lương cơ bản là lương ngày hay lương tháng? BP Photo "7 ảnh khác" nghĩa là gì? Bậc hoa hồng Sale (2% / 5% / 8%) tính trên doanh thu cá nhân hay doanh thu cả studio?',why:'Cần chốt trước khi dựng bảng lương.'}
+];
+const BACKLOG=[
+ ['B1','Bảng check-in và chấm công','Lấy ngày check-in để tính số công tháng.','2h','5–11/10'],
+ ['B2','Cấu hình lương theo bộ phận','Sale: 0–100tr 2%, 100–150tr 5%, trên 150tr 8%, 5% upsell. Photo: 4% theo job (không upsell), 5% newborn và tại nhà, 5.000đ/ảnh bé, 7 ảnh khác, outsource 12% gói chụp, 50.000đ/album. Hỗ trợ: 4% / 5%. Makeup: người lớn 100.000đ, bé 50.000đ, mẫu/chuyên nghiệp 200.000đ.','2h','5–11/10'],
+ ['B3','Bảng lương tháng','Lương cơ bản, ngày công, lương theo ngày công, phụ cấp trách nhiệm (nhập tay), lương ngoài, thưởng/phạt, lương doanh số, tổng thu nhập.','2h','5–11/10'],
+ ['B4','Kế hoạch chi tiêu chi tiết','Lương nhân sự, mặt bằng (điện, nước, dịch vụ), đầu tư – mua sắm – decor concept, in ấn (KPI 4%), thuế, phúc lợi; cột KPI | Thực tế. Nối vào % chi phí ở bảng doanh thu.','1,5h','12–18/10'],
+ ['B5','Bảng quản lý Concept','Mã concept, hình ảnh; thay trường chữ tạm ở Hợp đồng.','1h','12–18/10'],
+ ['B6','Bảng quản lý Lab in','Biên bản chỉ ghi tên bảng — cần Amber mô tả luồng in.','1h','12–18/10'],
+ ['B7','Bảng khảo sát khách hàng','SĐT, tên KH, đã dùng dịch vụ chưa — theo mẫu bảng của Ngọt.','1h','19–25/10'],
+ ['B8','Thống kê khách hàng và đơn hàng','Các view/dashboard thống kê; mở rộng view Công nợ.','1,5h','19–25/10']
+];
+
+const done=new Set();
+let fPhase='all',fStatus='all',openId=null;
+const WD=['CN','T2','T3','T4','T5','T6','T7'];
+function today(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+function pd(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function fmt(s){const d=pd(s);return WD[d.getDay()]+' · '+d.getDate()+'/'+(d.getMonth()+1);}
+function status(t){if(done.has(t.id))return 'done';const d=pd(t.date),n=today();if(d<n)return 'late';if(+d===+n)return 'today';return 'todo';}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+function renderFilters(){
+  const ph=[['all','Tất cả',TASKS.length]].concat(PHASES.map(p=>[p.id,p.name,TASKS.filter(t=>t.p===p.id).length]));
+  document.getElementById('fPhase').innerHTML='<span class="lbl">Giai đoạn</span>'+ph.map(([k,n,c])=>`<button class="fb ${fPhase===k?'on':''}" data-ph="${k}">${n}<span class="cnt">${c}</span></button>`).join('');
+  const cnt=s=>TASKS.filter(t=>s==='all'||status(t)===s||(s==='todo'&&status(t)==='today')).length;
+  const st=[['all','Tất cả'],['today','Hôm nay'],['todo','Chưa làm'],['late','Trễ hạn'],['done','Đã xong']];
+  document.getElementById('fStatus').innerHTML='<span class="lbl">Trạng thái</span>'+st.map(([k,n])=>`<button class="fb ${fStatus===k?'on':''}" data-st="${k}">${n}<span class="cnt">${cnt(k)}</span></button>`).join('');
+}
+function fieldsHtml(t){
+  if(!t.fieldsGroups)return '';
+  return `<div class="blk full"><h4>Trường dữ liệu</h4>`+t.fieldsGroups.map(g=>`<p style="margin:6px 0 6px;font-size:12px;color:var(--warm-gray)">${g.n}</p><div class="fields">${(g.f||[]).map(x=>`<span>${x}</span>`).join('')}${(g.l||[]).map(x=>`<span class="l">${x}</span>`).join('')}${(g.fx||[]).map(x=>`<span class="f">${x}</span>`).join('')}</div>`).join('')+`<div class="legend">Trắng: nhập tay · Xanh: liên kết / tra cứu · Vàng: công thức</div></div>`;
+}
+function renderTasks(){
+  const list=TASKS.filter(t=>(fPhase==='all'||t.p===fPhase)&&(fStatus==='all'||status(t)===fStatus||(fStatus==='todo'&&status(t)==='today')));
+  const box=document.getElementById('tasks');
+  if(!list.length){box.innerHTML='<div class="empty">Không có việc nào khớp bộ lọc.</div>';return;}
+  box.innerHTML=list.map(t=>{
+    const s=status(t),ph=PHASES.find(p=>p.id===t.p);
+    const q=t.q?QS.find(x=>x.id===t.q):null;
+    const badge=s==='late'?'<span class="late-t">Trễ hạn</span>':s==='today'?'<span class="today-t">Hôm nay</span>':s==='done'?'<span>Đã xong</span>':'';
+    return `<article class="task ${s} ${openId===t.id?'open':''}" id="card-${t.id}">
+      <div class="thead" data-open="${t.id}">
+        <button class="cb" data-tick="${t.id}" aria-label="Đánh dấu hoàn thành"><svg viewBox="0 0 16 16" fill="none" stroke="#0A0A0A" stroke-width="2.4"><path d="M3 8.5l3.2 3L13 4.5"/></svg></button>
+        <div>
+          <div class="meta"><span class="id">${t.id}</span><span>${fmt(t.date)}</span><span>${t.min} phút</span><span>${t.owner}</span><span>${ph.name}</span>${badge}</div>
+          <div class="ttl">${t.title}</div>
+          <div class="out"><b>Đầu ra:</b> ${t.out}</div>
+        </div>
+        <div class="arrow">+</div>
+      </div>
+      <div class="tbody"><div class="grid2">
+        <div class="blk"><h4>Các bước</h4><ol>${t.steps.map(x=>`<li>${x}</li>`).join('')}</ol></div>
+        <div class="blk"><h4>Đo lường · xong khi</h4><ul>${t.measure.map(x=>`<li>${x}</li>`).join('')}</ul>
+          <h4 style="margin-top:14px">Phụ thuộc</h4><p>${t.dep}</p></div>
+        ${fieldsHtml(t)}
+        ${q?`<div class="warn full"><b>Cần chốt ${q.id} trước ${q.by}</b>${q.q}</div>`:''}
+      </div></div>
+    </article>`;}).join('');
+}
+function renderProgress(){
+  const n=done.size,p=Math.round(n/TASKS.length*100);
+  document.getElementById('doneTxt').textContent=n+'/'+TASKS.length;
+  document.getElementById('pct').textContent=p+'%';
+  document.getElementById('barAll').style.width=p+'%';
+  document.getElementById('phaseProg').innerHTML=PHASES.map((ph,i)=>{
+    const ts=TASKS.filter(t=>t.p===ph.id),d=ts.filter(t=>done.has(t.id)).length,mins=ts.reduce((a,t)=>a+t.min,0);
+    return `<div class="pp"><div class="k">GĐ ${i+1} · ${ph.range}</div><div class="t">${ph.name}</div><div class="bar"><i style="width:${Math.round(d/ts.length*100)}%"></i></div><div class="c">${d}/${ts.length} việc · ${mins} phút</div></div>`;}).join('');
+}
+function renderTimeline(){
+  const start=pd('2026-09-22'),n=today();let h='';
+  for(let i=0;i<13;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);
+    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const ts=TASKS.filter(t=>t.date===key),we=d.getDay()===0||d.getDay()===6;
+    h+=`<div class="day ${we?'we':''} ${+d===+n?'today':''}"><div class="d">${WD[d.getDay()]}<b>${d.getDate()}/${d.getMonth()+1}</b></div>${ts.map(t=>`<button class="chip-t ${status(t)==='done'?'done':status(t)==='late'?'late':''}" data-jump="${t.id}">${t.id}</button>`).join('')}</div>`;
+  }
+  document.getElementById('timeline').innerHTML=h;
+}
+function renderStatic(){
+  document.getElementById('qs').innerHTML=QS.map(q=>`<div class="q"><div class="qh"><span>${q.id} · chặn ${q.t}</span><span>Hạn ${q.by}</span></div><p>${q.q}</p><div class="why">${q.why}</div></div>`).join('');
+  document.getElementById('backlog').innerHTML=BACKLOG.map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td><td><span class="pill">${r[4]}</span></td></tr>`).join('');
+}
+function renderAll(){renderFilters();renderTasks();renderProgress();renderTimeline();}
+
+document.addEventListener('click',e=>{
+  const tick=e.target.closest('[data-tick]');
+  if(tick){e.stopPropagation();const id=tick.dataset.tick;done.has(id)?done.delete(id):done.add(id);renderAll();return;}
+  const ph=e.target.closest('[data-ph]');if(ph){fPhase=ph.dataset.ph;renderAll();return;}
+  const st=e.target.closest('[data-st]');if(st){fStatus=st.dataset.st;renderAll();return;}
+  const op=e.target.closest('[data-open]');if(op){const id=op.dataset.open;openId=openId===id?null:id;renderTasks();return;}
+  const j=e.target.closest('[data-jump]');
+  if(j){fPhase='all';fStatus='all';openId=j.dataset.jump;renderAll();document.getElementById('card-'+openId).scrollIntoView({behavior:'smooth',block:'center'});}
+});
+renderStatic();renderAll();
+</script>
+</body>
+</html>
